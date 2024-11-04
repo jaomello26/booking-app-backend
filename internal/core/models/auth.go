@@ -7,20 +7,27 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type AuthCredentials struct {
-	Name     string `json:"name" validate:"required,min=3"`
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=4"`
+type RegisterCredentials struct {
+	FirstName   string `json:"first_name" validate:"required,min=2,max=255"`
+	LastName    string `json:"last_name" validate:"required,min=2,max=255"`
+	PhoneNumber string `json:"phone_number" validate:"required"`
+	Email       string `json:"email" validate:"required,email,max=255"`
+	Password    string `json:"password" validate:"required,min=6,max=255"`
+}
+
+type LoginCredentials struct {
+	Email    string `json:"email" validate:"required,email,max=255"`
+	Password string `json:"password" validate:"required,min=6,max=255"`
 }
 
 type AuthRepository interface {
-	RegisterUser(ctx context.Context, registerData *AuthCredentials) (*User, error)
+	RegisterUser(ctx context.Context, registerData *RegisterCredentials) (*User, error)
 	GetUser(ctx context.Context, query interface{}, args ...interface{}) (*User, error)
 }
 
 type AuthService interface {
-	Login(ctx context.Context, loginData *AuthCredentials) (string, *User, error)
-	Register(ctx context.Context, registerData *AuthCredentials) (string, *User, error)
+	Login(ctx context.Context, loginData *LoginCredentials) (string, *User, error)
+	Register(ctx context.Context, registerData *RegisterCredentials) (string, *User, error)
 }
 
 func MatchesHash(password, hash string) bool {

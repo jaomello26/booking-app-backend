@@ -17,14 +17,16 @@ func NewAuthRepository(db *gorm.DB) models.AuthRepository {
 	}
 }
 
-func (r *AuthRepository) RegisterUser(ctx context.Context, registerData *models.AuthCredentials) (*models.User, error) {
+func (r *AuthRepository) RegisterUser(ctx context.Context, registerData *models.RegisterCredentials) (*models.User, error) {
 	user := &models.User{
-		Name:     registerData.Name,
-		Email:    registerData.Email,
-		Password: registerData.Password,
+		FirstName:   registerData.FirstName,
+		LastName:    registerData.LastName,
+		PhoneNumber: registerData.PhoneNumber,
+		Email:       registerData.Email,
+		Password:    registerData.Password,
 	}
 
-	err := r.db.WithContext(ctx).Model(&models.User{}).
+	err := r.db.WithContext(ctx).
 		Create(user).
 		Error
 
@@ -34,7 +36,7 @@ func (r *AuthRepository) RegisterUser(ctx context.Context, registerData *models.
 func (r *AuthRepository) GetUser(ctx context.Context, query interface{}, args ...interface{}) (*models.User, error) {
 	user := &models.User{}
 
-	err := r.db.WithContext(ctx).Model(user).
+	err := r.db.WithContext(ctx).
 		Where(query, args...).
 		First(user).
 		Error

@@ -24,7 +24,7 @@ func NewAuthService(repository models.AuthRepository) models.AuthService {
 	}
 }
 
-func (s *AuthService) Login(c context.Context, loginData *models.AuthCredentials) (string, *models.User, error) {
+func (s *AuthService) Login(c context.Context, loginData *models.LoginCredentials) (string, *models.User, error) {
 	user, err := s.repository.GetUser(c, "email = ?", loginData.Email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -50,16 +50,9 @@ func (s *AuthService) Login(c context.Context, loginData *models.AuthCredentials
 	return token, user, nil
 }
 
-func (s *AuthService) Register(c context.Context, registerData *models.AuthCredentials) (string, *models.User, error) {
+func (s *AuthService) Register(c context.Context, registerData *models.RegisterCredentials) (string, *models.User, error) {
 	if !models.IsValidEmail(registerData.Email) {
 		return "", nil, fmt.Errorf("please, provide a valid email to register")
-	}
-
-	if len(registerData.Password) < 4 {
-		return "", nil, fmt.Errorf("password must be at least 6 characters")
-	}
-	if len(registerData.Name) < 3 {
-		return "", nil, fmt.Errorf("name must be at least 3 characters")
 	}
 
 	_, err := s.repository.GetUser(c, "email = ?", registerData.Email)

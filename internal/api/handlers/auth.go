@@ -24,7 +24,7 @@ func NewAuthHandler(route fiber.Router, service models.AuthService) {
 }
 
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
-	creds := &models.AuthCredentials{}
+	creds := &models.LoginCredentials{}
 	if err := c.BodyParser(&creds); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"status":  "fail",
@@ -62,7 +62,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 }
 
 func (h *AuthHandler) Register(c *fiber.Ctx) error {
-	creds := &models.AuthCredentials{}
+	creds := &models.RegisterCredentials{}
 	if err := c.BodyParser(&creds); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"status":  "fail",
