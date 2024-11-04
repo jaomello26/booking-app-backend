@@ -1,0 +1,10 @@
+.vscode
+
+# Air
+post_cmd.txt
+pre_cmd.txt
+tmp
+
+# Binaries
+bin/*
+!bin/.keep
